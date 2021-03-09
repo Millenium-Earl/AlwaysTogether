@@ -48,7 +48,7 @@ function App() {
 
   return (
     <div className="App" 
-    backgroundColor="black">
+    kgroundcolor="black">
 
       <Router>
         <Route path='/join' exact component={Join} />

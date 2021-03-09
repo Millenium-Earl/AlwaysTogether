@@ -9,6 +9,7 @@ import { scrollToBottom } from '../Utils/helpers';
 import { readRecord } from "../Utils/localStorageService";
 import { sendChatMessage } from "../ChatAPI/chat";
 import User from '../Components/User'
+import InfoBar from "../Components/InfoBar";
 
 
 
@@ -88,7 +89,7 @@ export default function RoomChat({addMessageCallback, messages }) {
         
         <Container className={classes.chatChat}>
             <div className={classes.roomName}>
-            <p> UN CHAT</p>
+            <InfoBar />
             </div>
 
             <div className={classes.messages}>
@@ -118,7 +119,7 @@ export default function RoomChat({addMessageCallback, messages }) {
 
 
 <div className="messages-list" ref={messagesAreaRef}>
-          {updatedMessages.map((msg, idx) => {
+          { /*updatedMessages.map((msg, idx) => {
             const isSender = msg.sender.uid === readRecord('username');
             return (
               <div className={isSender ? " message left" : "message right"} key={idx}>
@@ -140,7 +141,7 @@ export default function RoomChat({addMessageCallback, messages }) {
                 {!isSender && <User userData={msg.sender} />}
               </div>
             )
-          })}
+          }) */} 
         </div>
 
             </div>

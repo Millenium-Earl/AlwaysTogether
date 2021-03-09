@@ -222,7 +222,7 @@ const Controls = ( props, ref ) => {
             min={0}
             max={100} /* get the maxTime of the vid */
             value={played * 100} 
-            ValueLabelComponent={ValueLabelComponent}
+            ValueLabelComponent={(props) => <ValueLabelComponent {...props} value={elapsedTime} />}
             onChange={onSeek}
             onMouseDown={onSeekMouseDown}
             onChangeCommitted={onSeekMouseUp}

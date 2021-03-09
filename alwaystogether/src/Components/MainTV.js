@@ -15,6 +15,7 @@ import CustomControls from "./CustomControls"
 
 import { TimingObject } from 'timing-object';
 import { setTimingsrc, TIMINGSRC } from 'timingsrc';
+import RoomChat from './RoomChat';
 
 
 const MainTV = (props) => {
@@ -282,6 +283,7 @@ const MainTV = (props) => {
            
               </div>
         </Container>
+        <RoomChat />
         </div>
       )
     }
