@@ -91,7 +91,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function PrimarySearchAppBar(props) {
-  const {setText, text} = props;
+  let socket;
+  const {setVideoURL, videoURL} = props;
   const myValue = useRef();
   const inputs= useRef();
   const classes = useStyles();
@@ -99,7 +100,10 @@ export default function PrimarySearchAppBar(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   
   const handleChange = (event) => {
-    setText(inputs.current.value);}
+    
+      setVideoURL(inputs.current.value)
+    }
+    
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -156,14 +160,14 @@ export default function PrimarySearchAppBar(props) {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem>
+      {/*<MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -207,6 +211,7 @@ export default function PrimarySearchAppBar(props) {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onKeyPress={event => event.key === 'Enter' ? handleChange(event) : null}
               
             />
             
@@ -214,11 +219,13 @@ export default function PrimarySearchAppBar(props) {
           </div>
           <Button
         variant="contained"
-        onClick={handleChange}
+        onClick={event => handleChange(event)}
         color="primary"
         className={classes.button}
         endIcon={<Icon>send</Icon>}
-      >
+       
+      >       
+
         enter
       </Button>
           <div className={classes.grow} />

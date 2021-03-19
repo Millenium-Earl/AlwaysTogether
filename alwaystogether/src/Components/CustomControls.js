@@ -19,9 +19,7 @@ import VolumeMute from "@material-ui/icons/VolumeOff";
 import FullScreenIcon from "@material-ui/icons/Fullscreen";
 import Popover from "@material-ui/core/Popover";
 import { TimingObject } from 'timing-object';
-
 import { setTimingsrc } from 'timingsrc';
-
 
 
 //const timingObject = new TimingObject(new TimingProvider('0123456789abcdefghij'));
@@ -40,6 +38,9 @@ const useStyles = makeStyles({
     flexDirection: "column",
     justifyContent: "space-between",
     zIndex: 1,
+    height :"100%",
+    width:"100%",
+  
   },
   controlIcons: {
     color: "#777",
@@ -166,7 +167,7 @@ const Controls = ( props, ref ) => {
 
 
 
-
+  
 
 
 
@@ -178,11 +179,11 @@ const Controls = ( props, ref ) => {
         direction="row"
         alignItems="center"
         justify="space-between"
-        style={{ padding: 16 }}
+       
       >
         <Grid item>
           <Typography variant="h5" style={{ color: "#fff" }}>
-            Video Title
+            
           </Typography>
         </Grid>
 

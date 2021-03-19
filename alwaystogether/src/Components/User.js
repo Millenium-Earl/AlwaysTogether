@@ -1,11 +1,11 @@
 import React from "react";
 
 
-function User({ userData }) {
+function User({ name }) {
   return (
     <div className="user">
-      <div className="nickname">{userData.name}</div>
-      <div className="avatar"><img src={userData.avatar} alt="User avatar"/></div>
+      <div className="nickname">{name}</div>
+      <div className="avatar"><img src={"e.avatar"} alt="User avatar"/></div>
     </div>
   );
 }

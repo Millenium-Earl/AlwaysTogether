@@ -1,5 +1,5 @@
 import React,{ useState, useEffect, useRef } from 'react';
-import { Container } from '@material-ui/core';
+import { colors, Container } from '@material-ui/core';
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import { SideBar } from 'react-chat-elements'
 import { findDOMNode } from "react-dom";
@@ -7,14 +7,15 @@ import ReactPlayer from 'react-player'
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import screenful from "screenfull";
-
+import io from 'socket.io-client'
 
 
 import Nav from './Nav';
 import CustomControls from "./CustomControls"
 
 import { TimingObject } from 'timing-object';
-import { setTimingsrc, TIMINGSRC } from 'timingsrc';
+import { timingsrc,setTimingsrc } from 'timingsrc';
+
 import RoomChat from './RoomChat';
 
 
@@ -24,10 +25,11 @@ const MainTV = (props) => {
   
 
     //refs 
-      const playerRef = useRef();
+    
+      let playerRef = useRef();
       const playerContainerRef = useRef();
       const controlsRef = useRef();
-    
+      
     
       //Format (found)
       const format = (seconds) => {
@@ -43,25 +45,27 @@ const MainTV = (props) => {
         }
         return `${mm}:${ss}`;
       };
-      
+
+
+      const ENDPOINT = "localhost:5003"
+      //States 
+      let socket = io();
       
       const [text, setText] = useState("")
-    //States 
-    var count = 0;
-     // const [showControls, setShowControls] = useState(false);
+      const [count, setCount] = useState(0)
       const [timeDisplayFormat, setTimeDisplayFormat] = useState("normal");
-
+      const [videoURL, setVideoURL] = useState("")
     
       const [state, setState] = useState({
     
         playing:false,
         played:0,
-        muted: true,
+        muted: false,
         duration: 0,
         playbackRate: 1.0,
         volume: 1,
         loop: false,
-        seeking: false,
+        seeking: true,
     
     
     });
@@ -69,26 +73,37 @@ const MainTV = (props) => {
     
       const {playing,played, muted, volume, seeking, control, light, pip} = state;
      // const {text} = props;
+     //const media = JSON.stringify(playerRef)
+     
     
-      
+    
       const handlePlay = () => {
+        socket.emit('playVid',)
         setState({...state, playing: !state.playing})
+        
       }
       /*const handleProgress =(changeState) => {
         console.log(changeState)
         setState({...state, ...changeState})
       } 
     */
+      socket.on('playVid', () => {
+   setState({...state, playing: !state.playing})
+    });
+      
     
     
       const handleProgress = (changeState) => {
-        if (count > 3) {
+        console.log("alone"+count)
+        if (count > 2) {
           controlsRef.current.style.visibility = "hidden";
-          count = 0;
+          
+          console.log("si +3"+count)
         }
         
-        if (controlsRef.current.style.visibility === "visible") {
-          count += 1;
+        if (controlsRef.current.style.visibility == "visible") {
+          setCount(count+1)
+          console.log("incr"+count)
         }
         if (!state.seeking) {
           setState({ ...state, ...changeState });
@@ -149,13 +164,13 @@ const MainTV = (props) => {
       const handleMouseMove = () => {
         console.log("mousemove");
         controlsRef.current.style.visibility = "visible";
-        count = 0;
+        setCount(0)
       };
     
       const handleMouseLeave = () => {
         
         controlsRef.current.style.visibility = "hidden";
-        count = 0;
+        setCount(0)
         
       };
       const handlerien = () => {
@@ -170,6 +185,18 @@ const MainTV = (props) => {
       const hanldeMute = () => {
         setState({ ...state, muted: !state.muted });
       };
+     
+      useEffect(() => {
+
+//        const mediaElement = playerRef.current
+  //   Object.preventExtensions(playerRef);
+   //  const timingObject = new TimingObject();
+
+    // setTimingsrc(mediaElement, timingObject);
+        
+    }, []);
+  
+  
     /*  
       const timingObject = new TimingObject(new TimingProvider('0123456789abcdefghij'));
       
@@ -196,16 +223,16 @@ const MainTV = (props) => {
       Cwrapper: {
         position: "relative",
         float :"left",
-        height: "100%",
-        width: "84vw",
+        maxHeight: "100%",
+        maxWidth: "83vw",
         margin  :"0",
         padding:"0",
         
       },
-      playerWrapper : {
-        height:"100%",
-        width:"85vw",
-      }
+      Frag :{
+        display :"flex",
+        flexDirection :"row",
+      },
       });  
       const classes = useStyles();
       
@@ -227,22 +254,22 @@ const MainTV = (props) => {
       // var to = new TimingObject();
       //playerRef.current.timingsrc = to;
     
-      return (<div>
-           <Nav text={text} setText={setText} / >
-        <Container className={classes.Cwrapper}
-        maxWidth='false'
-        height='100vh'>
+      return (<React.Fragment>
+           <Nav videoURL={videoURL} setVideoURL={setVideoURL} / >
+           
+       
     
-    
+
           <div 
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           ref={playerContainerRef}
           className={classes.playerWrapper}>
-          <ReactPlayer className="react-player"
-              url= {text}
-              width="85vw"
-              controls= {0}
+             <div className={classes.Cwrapper}>
+          <ReactPlayer
+              url= {videoURL}
+              width="84vw"
+              controls= {false}
               muted = {muted}
               height="93.4vh"
               margin ="0"
@@ -250,7 +277,9 @@ const MainTV = (props) => {
               ref={playerRef}
               playing={playing}
               volume = {volume}
-              
+              onSeek={e => console.log('onSeek', e)}
+              // to show onProgress={e => console.log('onProress', e)}
+               
               onProgress ={handleProgress}
             />
     
@@ -281,10 +310,13 @@ const MainTV = (props) => {
     
     
            
-              </div>
-        </Container>
-        <RoomChat />
+             
+              
         </div>
+        <RoomChat location={props.location}  />
+        </div>
+       
+        </React.Fragment>
       )
     }
 export default MainTV;

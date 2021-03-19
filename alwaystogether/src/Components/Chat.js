@@ -56,6 +56,7 @@ console.log(message,messages);
         
         //<div className={classes.inputMess}>
         <div className={"input"}>
+            
         <Input 
             placeholder="Type here..."
             value={message}
