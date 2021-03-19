@@ -15,17 +15,18 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import InfoBar from "../Components/InfoBar";
 import Input from "./Input";
 import Messages from './Messages'
+import SocketContext from "./Socket";
 
 
 
 
 
-let socket;
 
-const RoomChat = ({ location }) => {
+
+const RoomChat = ({ location, ENDPOINT }) => {
   const myMess = useRef();
 
-  
+  const socket = React.useContext(SocketContext);
   
 
 
@@ -34,12 +35,12 @@ const RoomChat = ({ location }) => {
     const [room, setRoom] = useState('');
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const ENDPOINT = "localhost:5003"
+    
         useEffect(() => {
           let chemin= location.search
             const {name, room} = queryString.parse(chemin)
             
-            socket = io(ENDPOINT);
+            
 
             setName(name);
             setRoom(room);
@@ -48,7 +49,7 @@ const RoomChat = ({ location }) => {
                 //Error handling or whatever osef
             });
 
-
+console.log("login  " + socket)
             
 
 return() => {
@@ -64,6 +65,8 @@ useEffect(() => {
     socket.on('message', (message) => {
     setMessages([...messages, message]);
     })
+    
+    console.log('mesage   ' + socket);
     
 }, [messages]);
 

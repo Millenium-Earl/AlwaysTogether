@@ -15,13 +15,21 @@ import CustomControls from "./CustomControls"
 
 import { TimingObject } from 'timing-object';
 import { timingsrc,setTimingsrc } from 'timingsrc';
+import SocketContext from "./Socket";
 
 import RoomChat from './RoomChat';
 
 
 const MainTV = (props) => {
-   
+ 
+  const socket = React.useContext(SocketContext);
+useEffect(() => {
 
+
+   
+    
+    
+}, []);
   
 
     //refs 
@@ -47,10 +55,9 @@ const MainTV = (props) => {
       };
 
 
-      const ENDPOINT = "localhost:5003"
-      //States 
-      let socket = io();
       
+      //States 
+
       const [text, setText] = useState("")
       const [count, setCount] = useState(0)
       const [timeDisplayFormat, setTimeDisplayFormat] = useState("normal");
@@ -78,20 +85,28 @@ const MainTV = (props) => {
     
     
       const handlePlay = () => {
-        socket.emit('playVid',)
+        
         setState({...state, playing: !state.playing})
+        socket.emit('playVid1', state.playing)
         
       }
       /*const handleProgress =(changeState) => {
         console.log(changeState)
         setState({...state, ...changeState})
       } 
-    */
-      socket.on('playVid', () => {
-   setState({...state, playing: !state.playing})
-    });
+    */ useEffect(() => {
+      
       
     
+    }, []);
+     
+      
+    socket.on('playVid2', () => {
+
+      setState({ playing: state.playing})
+       });
+    
+  
     
       const handleProgress = (changeState) => {
         console.log("alone"+count)
@@ -313,7 +328,7 @@ const MainTV = (props) => {
              
               
         </div>
-        <RoomChat location={props.location}  />
+        <RoomChat location={props.location} />
         </div>
        
         </React.Fragment>

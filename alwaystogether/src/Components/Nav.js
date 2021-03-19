@@ -16,6 +16,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import io from 'socket.io-client'
+import SocketContext from "./Socket";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -91,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function PrimarySearchAppBar(props) {
-  let socket;
+  const socket = React.useContext(SocketContext);
   const {setVideoURL, videoURL} = props;
   const myValue = useRef();
   const inputs= useRef();
@@ -102,7 +105,23 @@ export default function PrimarySearchAppBar(props) {
   const handleChange = (event) => {
     
       setVideoURL(inputs.current.value)
+      var test = inputs.current.value  
+    socket.emit('videoChange1', test )
+
     }
+    
+    useEffect(() => {
+
+      socket.on('videoChange2', (videoURL) =>  {
+        setVideoURL(videoURL)
+        console.log( "dront data"+ videoURL)
+         });
+   
+    
+         
+      
+    }, [videoURL]);
+    
     
 
   const isMenuOpen = Boolean(anchorEl);

@@ -57,11 +57,12 @@ io.on('connection',(socket) =>{
 
 
 
-    socket.on('playVid', () => {
+    socket.on('playVid1', (data) => {
         const user = getUser(socket.id);
         console.log(user);
         //let current = io.to(user.room)
-        socket.broadcast.to(user.room).emit('playVid',)
+        console.log("playVid   "  + data)
+        socket.broadcast.to(user.room).emit('playVid2', data)
 
     })
 
@@ -78,7 +79,12 @@ io.on('connection',(socket) =>{
         callback();
       });
 
-
+socket.on('videoChange1', (data) => {
+    const user = getUser(socket.id);
+    console.log(user);
+    console.log("data" +data)
+    socket.broadcast.to(user.room).emit('videoChange2', data)
+})
       
 
       socket.on('sync video', function(data) {
