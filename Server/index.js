@@ -66,6 +66,19 @@ io.on('connection',(socket) =>{
 
     })
 
+    socket.on('seek1',(data)=>{
+        const user = getUser(socket.id);
+        console.log("seeking to     "+  data)
+        socket.broadcast.to(user.room).emit('seek2', data)
+    } )
+
+
+    socket.on('seek3',(data)=>{
+        const user = getUser(socket.id);
+        console.log("seeking to     "+  data)
+        socket.emit('seek4', data)
+        
+    } )
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
@@ -81,9 +94,10 @@ io.on('connection',(socket) =>{
 
 socket.on('videoChange1', (data) => {
     const user = getUser(socket.id);
+    let current = io.to(user.room)
     console.log(user);
-    console.log("data" +data)
-    socket.broadcast.to(user.room).emit('videoChange2', data)
+    console.log("data" +data) 
+    io.sockets.in(user.room).emit('videoChange2', data) //broadcast.to(user.room).
 })
       
 
