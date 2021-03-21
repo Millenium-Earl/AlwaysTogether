@@ -18,6 +18,7 @@ import { timingsrc,setTimingsrc } from 'timingsrc';
 import SocketContext from "./Socket";
 
 import RoomChat from './RoomChat';
+import { StateContext } from 'react-scroll-to-bottom';
 
 
 const MainTV = (props) => {
@@ -73,6 +74,7 @@ useEffect(() => {
         volume: 1,
         loop: false,
         seeking: true,
+        onSeek: 0,
     
     
     });
@@ -81,7 +83,7 @@ useEffect(() => {
       const {playing,played, muted, volume, seeking, control, light, pip} = state;
      // const {text} = props;
      //const media = JSON.stringify(playerRef)
-     
+  const player = playerRef.current
     
     
       const handlePlay = () => {
@@ -101,10 +103,17 @@ useEffect(() => {
     }, []);
      
       
-    socket.on('playVid2', () => {
+    socket.on('playVid2', (data) => {
 
-      setState({ playing: state.playing})
+      setState({...state, playing: !data})
+
        });
+    socket.on('seek2', (data) => {
+      
+      setState({state,  played: parseFloat(data / 100) });
+
+      
+    })
     
   
     
@@ -143,6 +152,8 @@ useEffect(() => {
       const handleSeekChange = (e, newValue) => {
         console.log({ newValue });
         setState({ ...state, played: parseFloat(newValue / 100) });
+        socket.emit('seek1', newValue )
+        
       };
     
       const handleSeekMouseDown = (e) => {
@@ -154,7 +165,12 @@ useEffect(() => {
         setState({ ...state, seeking: false });
         // console.log(sliderRef.current.value)
         playerRef.current.seekTo(newValue / 100, "fraction");
+        socket.emit('seek3', newValue)
+        socket.on('seek4', (data)=>{
+          playerRef.current.seekTo(data / 100, "fraction");
+        })
       };
+      
     
       const handleDuration = (duration) => {
         setState({ ...state, duration });
@@ -235,11 +251,11 @@ useEffect(() => {
     
       const useStyles = makeStyles({
     
-      Cwrapper: {
+      playerWrapper: {
         position: "relative",
         float :"left",
         maxHeight: "100%",
-        maxWidth: "83vw",
+        maxWidth: "84.7%", //83vw
         margin  :"0",
         padding:"0",
         
@@ -319,7 +335,8 @@ useEffect(() => {
                             onVolumeChange={handleVolumeChange}
                             onVolumeSeekDown={handleVolumeSeekDown}
                             onPlaybackRateChange={handlePlaybackRate}
-                            onToggleFullScreen={toggleFullScreen} />
+                            onToggleFullScreen={toggleFullScreen}
+                            socket={socket} />
     
     
     
@@ -328,8 +345,9 @@ useEffect(() => {
              
               
         </div>
-        <RoomChat location={props.location} />
         </div>
+        <RoomChat location={props.location} />
+        
        
         </React.Fragment>
       )

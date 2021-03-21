@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
 import IconButton from "@material-ui/core/IconButton";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
 import FastForwardIcon from "@material-ui/icons/FastForward";
@@ -20,6 +19,8 @@ import FullScreenIcon from "@material-ui/icons/Fullscreen";
 import Popover from "@material-ui/core/Popover";
 import { TimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
+import SocketContext from "./Socket";
+
 
 
 //const timingObject = new TimingObject(new TimingProvider('0123456789abcdefghij'));
@@ -114,7 +115,7 @@ const PrettoSlider = withStyles({
 
 const Controls = ( props, ref ) => {
 
-
+ // const socket = React.useContext(SocketContext);
     const {onPlayPause,
        played,
        playing,
@@ -132,7 +133,8 @@ const Controls = ( props, ref ) => {
                     volume,
                     onVolumeChange,
                     onVolumeSeekDown,
-                    onToggleFullScreen
+                    onToggleFullScreen,
+                    socket
                   } = props;
 
 
@@ -168,8 +170,6 @@ const Controls = ( props, ref ) => {
 
 
   
-
-
 
   return (
     <div ref={ref} className={classes.controlsWrapper}>
@@ -226,7 +226,7 @@ const Controls = ( props, ref ) => {
             ValueLabelComponent={(props) => <ValueLabelComponent {...props} value={elapsedTime} />}
             onChange={onSeek}
             onMouseDown={onSeekMouseDown}
-            onChangeCommitted={onSeekMouseUp}
+            onChangeCommitted={ onSeekMouseUp }
             onDuration={onDuration}
             ref={time}
            
