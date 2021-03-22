@@ -226,7 +226,7 @@ const Controls = ( props, ref ) => {
             ValueLabelComponent={(props) => <ValueLabelComponent {...props} value={elapsedTime} />}
             onChange={onSeek}
             onMouseDown={onSeekMouseDown}
-            onChangeCommitted={ onSeekMouseUp }
+            onChangeCommitted={  onSeekMouseUp }
             onDuration={onDuration}
             ref={time}
            

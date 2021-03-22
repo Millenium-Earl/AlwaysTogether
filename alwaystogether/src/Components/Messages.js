@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{forwardRef, ref} from 'react';
 
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { makeStyles} from "@material-ui/core/styles";
@@ -17,9 +17,9 @@ const classes = useStyles;
 
 
 const Messages = ({ messages, name }) => (
-<ScrollToBottom className={classes.messages}>
+<div className={classes.messages}>
     {messages.map((message, i) => <div key={i}><Message message={message} name={name}/></div>)}
-  </ScrollToBottom>
+  </div>
 );
 
-export default Messages;
+export default forwardRef(Messages);

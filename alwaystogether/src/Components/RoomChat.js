@@ -27,121 +27,124 @@ const RoomChat = ({ location, ENDPOINT }) => {
   const myMess = useRef();
 
   const socket = React.useContext(SocketContext);
-  
 
 
 
-    const [name, setName] = useState('');
-    const [room, setRoom] = useState('');
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    
-        useEffect(() => {
-          let chemin= location.search
-            const {name, room} = queryString.parse(chemin)
-            
-            
 
-            setName(name);
-            setRoom(room);
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
 
-            socket.emit('join', { name, room },() => {
-                //Error handling or whatever osef
-            });
+  useEffect(() => {
+    let chemin = location.search
+    const { name, room } = queryString.parse(chemin)
 
-console.log("login  " + socket)
-            
 
-return() => {
-    socket.disconnect();
-    socket.off();
-}
 
-        },[ENDPOINT, location.search])
+    setName(name);
+    setRoom(room);
 
-useEffect(() => {
+    socket.emit('join', { name, room }, () => {
+      //Error handling or whatever osef
+    });
+
+    console.log("login  " + socket)
+
+
+    return () => {
+      socket.disconnect();
+      socket.off();
+    }
+
+  }, [ENDPOINT, location.search])
+
+  useEffect(() => {
 
 
     socket.on('message', (message) => {
-    setMessages([...messages, message]);
+      setMessages([...messages, message]);
     })
-    
+
     console.log('mesage   ' + socket);
     
-}, [messages]);
-
-//send message function
-
-const sendMessage = (event) =>{
-    event.preventDefault();
-    if(message) {
-        
-        socket.emit('sendMessage', message, () => setMessage(''));
-      }
-    
+return() => {
+  socket.off('message')
 }
-console.log(message,messages);
+  }, [messages]);
 
-const useStyles = makeStyles({
-  chatChat: {
+  //send message function
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (message) {
+
+      socket.emit('sendMessage', message, () => setMessage(''));
+    }
+
+  }
+
+
+  const useStyles = makeStyles({
+    chatChat: {
       backgroundColor: "#3F51B5",
       position: "relative",
       float: "right",
       height: "93.4vh",
-      maxHeight:"93.4vh",
+      maxHeight: "93.4vh",
       minHeight: "93.4vh",
-      width : "15vw",
-      minWidth : "15vw",
-      maxWidth : "15vw",
-      display :"flex",
-     
-      flexDirection :"column",
-      justifyContent:"spaceBetween",
- 
-     
+      width: "15vw",
+      minWidth: "15vw",
+      maxWidth: "15vw",
+      display: "flex",
 
-   },
-   messages : {
-    padding: "5%, 0",
-    overflow: "auto",
-    flex: "auto",
-  },
-   Input : {
-       width :"100%",
-       backgroundColor :"black",
-
-   },
-   containerChat : {
-     backgroundColor :'#6b6b6b',
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    background: "#FFFFFF",
-    borderRadius: "8px",
-    overflow: "auto",
-    height: "100%",
-    width: "100%",
-   }
-});
-const classes = useStyles();
-
-  
-    
- return(
-    
+      flexDirection: "column",
+      justifyContent: "spaceBetween",
 
 
-  <div className={classes.chatChat}>
-     <InfoBar room={room} socket={socket}  location={location} />
-    <div className={classes.containerChat} scrolled='true'>
-     <ScrollToBottom className={classes.messages}>
-      <Messages  ref={myMess} messages={messages} name={name} />
-      </ScrollToBottom>
-  </div>
-  <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-  {/*<Component user={users} pour afficher la liste des connectés 
+
+    },
+    messages: {
+      padding: "5%, 0",
+      overflow: "auto",
+      flex: "auto",
+    },
+    Input: {
+      width: "100%",
+      backgroundColor: "black",
+
+    },
+    containerChat: {
+      backgroundColor: '#6b6b6b',
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      background: "#FFFFFF",
+      borderRadius: "8px",
+      overflow: "auto",
+      height: "100%",
+      width: "100%",
+    }
+  });
+  const classes = useStyles();
+
+
+
+  return (
+
+
+
+    <div className={classes.chatChat}>
+      <InfoBar room={room} socket={socket} location={location} />
+      <div className={classes.containerChat} scrolled='true'>
+        <div className={classes.messages}>
+          <Messages ref={myMess} messages={messages} name={name} />
+        </div>
+      </div>
+      <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      {/*<Component user={users} pour afficher la liste des connectés 
 a mettre en haut dans une icone près de profile a la place de messages  */}
-</div> )
-     
-          }
-  export default RoomChat;
+    </div>)
+
+}
+export default RoomChat;

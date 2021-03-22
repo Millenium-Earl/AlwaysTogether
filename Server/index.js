@@ -68,17 +68,20 @@ io.on('connection',(socket) =>{
 
     socket.on('seek1',(data)=>{
         const user = getUser(socket.id);
-        console.log("seeking to     "+  data)
+        console.log("seeking front to     "+  data)
         socket.broadcast.to(user.room).emit('seek2', data)
+
+
     } )
-
-
+    
     socket.on('seek3',(data)=>{
         const user = getUser(socket.id);
-        console.log("seeking to     "+  data)
-        socket.emit('seek4', data)
+        console.log("seeking value to    "+  data)
+        socket.broadcast.to(user.room).emit('seek4', data)
         
     } )
+
+    
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
@@ -118,22 +121,25 @@ socket.on('videoChange1', (data) => {
         }
     });
     
-      
+    socket.on('reconnected', () => {
+        io.to(user.room).emit('userReconnected', {})
+    })
    
-
+    
 
     socket.on('disconnect',()=>{
         console.log('we are finished')
         const user = removeUser(socket.id);
         if (user){
         io.to(user.room).emit('message', {user: 'admin', text:`${user.name} est mort`})
+        io.to(user.room).emit('userDisconnected', {user: 'admin', text:`${user.name} est mort`})
         db.query("DELETE FROM user WHERE Nom='" + user.name + "'", function (error, result) {
             //DELETE all messages in an empty room
             
         });
        
     } 
-    if (getUsersInRoom(user.room).length == 0) {
+    if (getUsersInRoom(user?.room)?.length == 0) {
         
        
        
