@@ -118,7 +118,6 @@ const Join = () => {
                     <Button  type='submit'
                     variant="contained"
                     color="primary"
-                    
                     className={classes.submit} > Entrez </Button> 
                     </Link>
 

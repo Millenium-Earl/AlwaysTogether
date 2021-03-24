@@ -22,4 +22,4 @@ const Messages = ({ messages, name }) => (
   </div>
 );
 
-export default forwardRef(Messages);
+export default Messages;

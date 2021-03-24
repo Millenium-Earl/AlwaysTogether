@@ -30,7 +30,7 @@ io.on('connection',(socket) =>{
                       
 
                 db.query("INSERT INTO user (Nom, room) VALUES ('" + user.name + "', '" + user.room + "')", function (error, result) {
-                     // ADD User to  DB
+                     if(error) console.log(error)
                  });
                  db.query("INSERT INTO rooms (nom) VALUES ('" + user.room + "')", function (error, result) {
                     // ADD Room to DB .....  Add state of player too
@@ -43,8 +43,8 @@ io.on('connection',(socket) =>{
 //emit : transmettre un event du back au front (avec le même string as first param)
 // on : expecting an event for the back
 
-            socket.emit('message', {user :'admin', text:`${user.name} -Bienvenu !   Tu es dans la room :  ${user.room}`} ) //faire un coucou a new venu
-            socket.broadcast.to(user.room).emit('message', {user :'admin' , text:`notre fréé ${user.name} vient de nous rejoindre `}); //dire aux autres a part lui...
+            socket.emit('message', {user :'admin', text:`${user.name} ! Bienvenu !   Tu es dans la room :  ${user.room}`} ) //faire un coucou a new venu
+            socket.broadcast.to(user.room).emit('message', {user :'admin' , text:` ${user.name} vient d'arriver `}); //dire aux autres a part lui...
             
             
             socket.join(user.room);
@@ -88,7 +88,8 @@ io.on('connection',(socket) =>{
         let current = io.to(user.room)
         current.emit('message', { user: user.name, text: message });
         db.query("INSERT INTO messages (sender, text, room) VALUES ('" + user.name + "', '" + message + "', '" + user.room + "')", function (error, result) {
-            //
+            if(error)
+            console.log(error)
         });
         current.emit('roomData', { room: user.room, users:getUsersInRoom(user.room) });
     
@@ -97,12 +98,22 @@ io.on('connection',(socket) =>{
 
 socket.on('videoChange1', (data) => {
     const user = getUser(socket.id);
-    let current = io.to(user.room)
+    
     console.log(user);
     console.log("data" +data) 
     io.sockets.in(user.room).emit('videoChange2', data) //broadcast.to(user.room).
 })
       
+
+socket.on('Rewind1', () =>{
+    const user = getUser(socket.id);
+    io.sockets.in(user.room).emit('Rewind2')
+}) ;
+
+socket.on('Forward1', () => {
+    const user = getUser(socket.id);
+    io.sockets.in(user.room).emit('Forward2')
+})
 
       socket.on('sync video', function(data) {
         if (io.sockets.adapter.rooms['room-' + socket.roomnum] !== undefined) {

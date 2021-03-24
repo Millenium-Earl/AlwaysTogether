@@ -17,8 +17,10 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import io from 'socket.io-client'
-import SocketContext from "./Socket";
+import Input from '@material-ui/core/Input';
 
+import SocketContext from "./Socket";
+import FileUploader from "./FileUploader"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -143,7 +145,7 @@ export default function PrimarySearchAppBar(props) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
+  
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -171,6 +173,8 @@ export default function PrimarySearchAppBar(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+
+
      {/* <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
@@ -200,6 +204,7 @@ export default function PrimarySearchAppBar(props) {
       </MenuItem>*/}
     </Menu>
   );
+
 
   return (
     <div className={classes.grow}>
@@ -249,6 +254,21 @@ export default function PrimarySearchAppBar(props) {
       </Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+           {/* <Button 
+            variant="contained"
+            color='primary'
+            className={classes.button}
+            endIcon={<Icon> upload</Icon>}>
+            <Input type='file' />
+           </Button> */}
+          
+            <FileUploader
+          onFileSelectSuccess={(file) => {
+            var path = (window.URL || window.webkitURL).createObjectURL(file);
+ setVideoURL(path); console.log(file) }}
+          onFileSelectError={({ error }) => {alert(error);} }
+        />
+           
        {/*     <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />

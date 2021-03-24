@@ -48,6 +48,8 @@ const MainTV = (props) => {
   };
 
 
+  
+
 
   //States 
 
@@ -55,26 +57,30 @@ const MainTV = (props) => {
   const [count, setCount] = useState(0)
   const [timeDisplayFormat, setTimeDisplayFormat] = useState("normal");
   const [videoURL, setVideoURL] = useState("")
+  const [selectedFile, setSelectedFile] = useState(null);
+
 
   const [state, setState] = useState({
     isReconnecting: false,
     playing: false,
-    played: 0,
+    played : 0,
     muted: false,
     duration: 0,
     playbackRate: 1.0,
     volume: 1,
     loop: false,
-    seeking: true,
-    seekValue: 0,
+    seeking: false,
+    
 
 
 
   });
   const [played, setPlayed] = useState("")
+ // const [playe, setPlaye] = useState({played : 0,})
 
 
-  const { playing, muted, volume, seekValue, seeking, control, light, pip } = state;
+  const {  playing, muted, volume } = state;
+ // const {played } = playe
  
   // const {text} = props;
   //const media = JSON.stringify(playerRef)
@@ -86,6 +92,7 @@ const MainTV = (props) => {
     socket.emit('playVid1', state.playing)
 
   }
+
   /*const handleProgress =(changeState) => {
     console.log(changeState)
     setState({...state, ...changeState})
@@ -136,6 +143,7 @@ const MainTV = (props) => {
     var newVal = parseFloat(data/100)
 
     setPlayed( newVal)
+    //setState({...state, played : parseFloat(data/100)})
 
 
   })
@@ -150,6 +158,17 @@ const MainTV = (props) => {
 
   })
 
+  socket.on('Rewind2', ()  => {
+    if (playerRef?.current)
+    playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    setState({ ...state, playing: false})
+  })
+  socket.on('Forward2', ()  => {
+    if (playerRef?.current)
+    playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    setState({ ...state, playing: false})
+  })
+
 
     return() => {
       socket.off('playVid2')
@@ -158,11 +177,14 @@ const MainTV = (props) => {
       socket.off('seek3')
       socket.off('seek2')
       socket.off('Seek4')
+      socket.off('Rewind2')
+      socket.off('Forward2')
     }
 
-  }, []);
+  }, [state, socket]);  //Need to fix this<<<< makes
     const handleProgress = (changeState) => {  // for controls visibility (onProgress is called
     // each time so...)
+    var {played} = changeState
     console.log("alone" + count)
     if (count > 2) {
       controlsRef.current.style.visibility = "hidden";
@@ -176,6 +198,7 @@ const MainTV = (props) => {
     }
     if (!state.seeking) {
       setState({ ...state, ...changeState });
+      setPlayed(played)
     }
   };
 
@@ -183,10 +206,12 @@ const MainTV = (props) => {
 
   const handleRewind = () => {  //rewind
     playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    socket.emit('Rewind1',)
   };
 
   const handleFastForward = () => { // forward
     playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    socket.emit('Forward1',)
   };
 
   const handleDisplayFormat = () => { // click for time display
@@ -198,7 +223,9 @@ const MainTV = (props) => {
 
 
   const handleSeekChange = (e, newValue) => {
-    setPlayed( parseFloat(newValue / 100))
+    
+   // setState({ ...state, played: parseFloat(newValue / 100) });
+   setPlayed( parseFloat(newValue / 100))
   
     socket.emit('seek1', newValue)
 
@@ -254,9 +281,7 @@ const MainTV = (props) => {
     setCount(0)
 
   };
-  const handlerien = () => {
-    count = 1;
-  }
+ 
 
 
   const handlePlaybackRate = (rate) => {
@@ -267,37 +292,22 @@ const MainTV = (props) => {
     setState({ ...state, muted: !state.muted });
   };
 
-  useEffect(() => {
-
-    //
-    //   Object.preventExtensions(playerRef);
-    //  const timingObject = new TimingObject();
-
-    // setTimingsrc(mediaElement, timingObject);
-
-  }, []);
 
 
-  /*  
-    const timingObject = new TimingObject(new TimingProvider('0123456789abcdefghij'));
-    
-    const playButton = document.getElementById('play');
   
-  
-    playButton.addEventListener('click', () => {
-      const { position, velocity } = timingObject.query();
-  
-      if (position === 100 && velocity === 0) {
-          timingObject.update({ position: 0, velocity: 1 });
-      } else {
-          timingObject.update({ velocity: 1 });
-      }
-  });
-  
-  const player = this.myRef.current;
-  */
 
+  const currentTime =
+  playerRef && playerRef.current
+    ? playerRef.current.getCurrentTime()
+    : "00:00";
+const duration =
+  playerRef && playerRef.current ? playerRef.current.getDuration() : "00:00";
+const elapsedTime =
+  timeDisplayFormat === "normal"
+    ? format(currentTime)
+    : `-${format(duration - currentTime)}`;
 
+const totalDuration = format(duration);
 
   const useStyles = makeStyles({
 
@@ -314,29 +324,26 @@ const MainTV = (props) => {
       display: "flex",
       flexDirection: "row",
     },
+    circle: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      right: "50%",
+      bottom: "50%",
+
+    }
   });
+
   const classes = useStyles();
 
 
 
-  const currentTime =
-    playerRef && playerRef.current
-      ? playerRef.current.getCurrentTime()
-      : "00:00";
-  const duration =
-    playerRef && playerRef.current ? playerRef.current.getDuration() : "00:00";
-  const elapsedTime =
-    timeDisplayFormat === "normal"
-      ? format(currentTime)
-      : `-${format(duration - currentTime)}`;
+  
 
-  const totalDuration = format(duration);
 
-  // var to = new TimingObject();
-  //playerRef.current.timingsrc = to;
 
   return (<React.Fragment>
-    <Nav videoURL={videoURL} setVideoURL={setVideoURL} />
+    <Nav videoURL={videoURL} setVideoURL={setVideoURL} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
 
 
 
@@ -347,7 +354,7 @@ const MainTV = (props) => {
       ref={playerContainerRef}
       className={classes.playerWrapper}>
       {
-        state.isReconnecting ? <CircularProgress /> : <div> </div>
+        state.isReconnecting ?  <CircularProgress className={classes.circle} />  : <div> </div>
       }
       <div className={classes.Cwrapper}>
         <ReactPlayer

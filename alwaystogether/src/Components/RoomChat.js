@@ -54,7 +54,7 @@ const RoomChat = ({ location, ENDPOINT }) => {
 
     return () => {
       socket.disconnect();
-      socket.off();
+      socket.off('join');
     }
 
   }, [ENDPOINT, location.search])

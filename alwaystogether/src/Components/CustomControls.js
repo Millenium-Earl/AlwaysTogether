@@ -134,7 +134,7 @@ const Controls = ( props, ref ) => {
                     onVolumeChange,
                     onVolumeSeekDown,
                     onToggleFullScreen,
-                    socket
+                    
                   } = props;
 
 
@@ -226,8 +226,9 @@ const Controls = ( props, ref ) => {
             ValueLabelComponent={(props) => <ValueLabelComponent {...props} value={elapsedTime} />}
             onChange={onSeek}
             onMouseDown={onSeekMouseDown}
-            onChangeCommitted={  onSeekMouseUp }
+            track={'normal'}
             onDuration={onDuration}
+            onChangeCommitted={onSeekMouseUp}
             ref={time}
            
           />
