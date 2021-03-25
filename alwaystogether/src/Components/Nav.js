@@ -18,6 +18,9 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import io from 'socket.io-client'
 import Input from '@material-ui/core/Input';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Modall from './Modal'
 
 import SocketContext from "./Socket";
 import FileUploader from "./FileUploader"
@@ -102,8 +105,22 @@ export default function PrimarySearchAppBar(props) {
   const inputs= useRef();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [nom, setNom] = React.useState(false);
+  const [file, setFile] = React.useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   
+
+  const handleOpenModal = (file,nom) => {
+    setOpen(true);
+    setFile(file)
+    setNom(nom)
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
   const handleChange = (event) => {
     
       setVideoURL(inputs.current.value)
@@ -119,7 +136,18 @@ export default function PrimarySearchAppBar(props) {
         console.log( "dront data"+ videoURL)
          });
    
-    
+    socket.on('FileUploadNotif2',(file,nom)=>{
+      
+
+
+        
+handleOpenModal(file, nom)
+
+    })
+    return()=> {
+      socket.off('FileUploadNotif')
+      socket.off('FileUploadNotif2')
+    }
          
       
     }, [videoURL]);
@@ -263,48 +291,20 @@ export default function PrimarySearchAppBar(props) {
            </Button> */}
           
             <FileUploader
-          onFileSelectSuccess={(file) => {
+            onFileSelectSuccess={(file) => {
+            var nom = file.name
             var path = (window.URL || window.webkitURL).createObjectURL(file);
- setVideoURL(path); console.log(file) }}
-          onFileSelectError={({ error }) => {alert(error);} }
+ setVideoURL(path); console.log(file) ; socket.emit('FileUploadNotif', nom )}}
+          onFileSelectError={({ error }) => {alert(error); console.log(file)} }
         />
            
-       {/*     <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton> */}
+      
           </div>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <Modall open={open} setOpen={setOpen} handleOpen={handleOpenModal} handleClose={handleCloseModal} nom={nom} file={file} setVideoURL={setVideoURL}   />
     </div>
   );
 }

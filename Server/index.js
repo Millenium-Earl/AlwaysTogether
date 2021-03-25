@@ -115,7 +115,13 @@ socket.on('Forward1', () => {
     io.sockets.in(user.room).emit('Forward2')
 })
 
-      socket.on('sync video', function(data) {
+
+socket.on('FileUploadNotif', (data) => {
+    const user= getUser(socket.id)
+    socket.broadcast.to(user.room).emit('FileUploadNotif2',data,user.name)
+
+})
+     {/* socket.on('sync video', function(data) {
         if (io.sockets.adapter.rooms['room-' + socket.roomnum] !== undefined) {
             var roomnum = data.room
             var currTime = data.time
@@ -130,7 +136,7 @@ socket.on('Forward1', () => {
                 playerId: playerId
             })
         }
-    });
+    }); */}
     
     socket.on('reconnected', () => {
         io.to(user.room).emit('userReconnected', {})

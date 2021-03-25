@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input'
+
 
 import React, {forwardRef, useRef} from 'react'
 
@@ -11,11 +10,15 @@ const FileUploader = ({onFileSelect,onFileSelectError,onFileSelectSuccess}) => {
         // handle validations
         const file = e.target.files[0]
        
-    if(file.type =='video/avi'){
-    onFileSelectError({error : "Entrez un fichier valide (MP4 ou MKV)"}) }
-
-  else onFileSelectSuccess(file);
-    }
+    if( file.type !== 'video/mp4' && file.type !=='video/x-matroska' )
+    
+ 
+    onFileSelectError({error : "Entrez un fichier valide (MP4 ou MKV)"}) 
+    
+    
+    
+  else {onFileSelectSuccess(file);}
+    } 
     const useStyle = makeStyles({
         customFileUpload:  {
             backgroundColor: "red",
@@ -38,7 +41,7 @@ const FileUploader = ({onFileSelect,onFileSelectError,onFileSelectSuccess}) => {
    
            
             <input type="file" id="fileUpload" onChange={handleFileInput} onClick={e => fileInput.current && fileInput.current.click()} hidden  />
-            <label for="fileUpload"className={classes.customFileUpload}> Local file</label>
+            <label for="fileUpload"className={classes.customFileUpload}>Upload Local file</label>
             
           
 
