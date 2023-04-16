@@ -32,9 +32,9 @@ const Message = ({ message: { text, user }, name }) => {
         text={ReactEmoji.emojify(text)}
         title={trimmedName}
         titleColor={"blue"}
-        notch={false}
+        notch={true}
         focus={"true"}
-        
+        date ={new Date()}
         />
     
         )
@@ -49,6 +49,7 @@ const Message = ({ message: { text, user }, name }) => {
         text={ReactEmoji.emojify(text)}
         title={user}
         titleColor={"orange"}
+        date={new Date()}
 
         
         />

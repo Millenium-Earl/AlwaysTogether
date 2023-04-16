@@ -18,7 +18,6 @@ import VolumeMute from "@material-ui/icons/VolumeOff";
 import FullScreenIcon from "@material-ui/icons/Fullscreen";
 import Popover from "@material-ui/core/Popover";
 import { TimingObject } from 'timing-object';
-import { setTimingsrc } from 'timingsrc';
 import SocketContext from "./Socket";
 
 

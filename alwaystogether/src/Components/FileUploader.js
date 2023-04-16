@@ -10,7 +10,7 @@ const FileUploader = ({onFileSelect,onFileSelectError,onFileSelectSuccess}) => {
         // handle validations
         const file = e.target.files[0]
        
-    if( file.type !== 'video/mp4' && file.type !=='video/x-matroska' )
+    if( file?.type !== 'video/mp4' && file?.type !=='video/x-matroska' )
     
  
     onFileSelectError({error : "Entrez un fichier valide (MP4 ou MKV)"}) 
@@ -40,7 +40,7 @@ const FileUploader = ({onFileSelect,onFileSelectError,onFileSelectSuccess}) => {
           
    
            
-            <input type="file" id="fileUpload" onChange={handleFileInput} onClick={e => fileInput.current && fileInput.current.click()} hidden  />
+            <input type="file" id="fileUpload" onChange={handleFileInput}  hidden  />
             <label for="fileUpload"className={classes.customFileUpload}>Upload Local file</label>
             
           

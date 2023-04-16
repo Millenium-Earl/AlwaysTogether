@@ -137,13 +137,11 @@ export default function PrimarySearchAppBar(props) {
          });
    
     socket.on('FileUploadNotif2',(file,nom)=>{
-      
-
-
-        
-handleOpenModal(file, nom)
+    
+      handleOpenModal(file, nom)
 
     })
+
     return()=> {
       socket.off('FileUploadNotif')
       socket.off('FileUploadNotif2')
@@ -294,7 +292,7 @@ handleOpenModal(file, nom)
             onFileSelectSuccess={(file) => {
             var nom = file.name
             var path = (window.URL || window.webkitURL).createObjectURL(file);
- setVideoURL(path); console.log(file) ; socket.emit('FileUploadNotif', nom )}}
+ setVideoURL(path); console.log(file) ; setOpen(false) ; socket.emit('FileUploadNotif', nom )}}
           onFileSelectError={({ error }) => {alert(error); console.log(file)} }
         />
            

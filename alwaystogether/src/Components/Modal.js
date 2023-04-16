@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SimpleModal(props) {
+    const modalButton = useRef()
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -47,14 +48,15 @@ export default function SimpleModal(props) {
         Votre ami {nom} vient de mettre le fichier : 
         <p>{file} </p>        
         <p> Veuillez mettre le même fichier </p>
-        <p>  <FileUploader
+        <p style={{float : 'right'}}>
+             <FileUploader
             onFileSelectSuccess={(file) => {
-            
             var path = (window.URL || window.webkitURL).createObjectURL(file);
-                     alert(path)} }
+            setOpen(false); alert(path); }  }
           onFileSelectError={({ error }) => {alert(error); console.log(file)} }
-        />
+        /> 
         </p>
+       
       </p>
       <SimpleModal />
     </div>

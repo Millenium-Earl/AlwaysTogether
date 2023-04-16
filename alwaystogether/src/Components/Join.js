@@ -32,7 +32,7 @@ const Join = () => {
           height: '100vh',
         },
         image: {
-          backgroundImage: 'url(/res/AT.jpg)',
+          
           backgroundRepeat: 'no-repeat',
           backgroundColor:"black",
           backgroundSize: 'contain',
@@ -68,6 +68,15 @@ const Join = () => {
       }));
       const classes = useStyles();
       const join = useRef();
+
+      function PressEnter(e){
+        e.preventDefault();
+        if(e.keyCode == 13){
+           alert("pressed enter key");
+        }
+        return false;
+    }
+    
 
     return(
          <Grid container component="main" className={classes.root}>
@@ -111,10 +120,14 @@ const Join = () => {
                  label="Room"
                  id="room"
                  onChange={handleRoom}
+                 onKeyPress={(event) => { if (event.key ==='Enter') { if (!name || !room) {event.preventDefault(); alert('Please choose a name and a room')} else  { return null } }}} 
+
+                //onKeyPress={event => event.key === 'Enter' ? handleChange(event) : null}
                   />
                  </div>
 
-                    <Link ref={join} onClick={(event)=> (!name || !room) ? event.preventDefault() : null } to={`/mainTV?name=${name}&room=${room}`}  >
+                    <Link ref={join} onClick={(event)=> { if (!name || !room) {event.preventDefault(); alert('Please choose a name and a room')} else  { return null } }} to={`/mainTV?name=${name}&room=${room}`}  
+                    onKeyPress={(event) => { if (event.key ==='Enter') { if (!name || !room) {event.preventDefault(); alert('Please choose a name and a room')} else  { return null } }}} >
                     <Button  type='submit'
                     variant="contained"
                     color="primary"

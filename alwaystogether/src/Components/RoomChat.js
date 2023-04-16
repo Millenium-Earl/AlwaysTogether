@@ -1,7 +1,7 @@
 import { Container, Divider } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { MessageBox, Button, } from 'react-chat-elements'
+import { MessageBox, Button} from 'react-chat-elements'
 import 'react-chat-elements/dist/main.css';
 import { MEDIA_MSG, TEXT_MSG } from "../Utils/consts";
 import PubSub from "pubsub-js";
@@ -141,7 +141,17 @@ return() => {
           <Messages ref={myMess} messages={messages} name={name} />
         </div>
       </div>
-      <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      {/* <Input
+    placeholder="Type here..."
+    multiline={true}
+    rightButtons={
+        <Button
+            color='white'
+            backgroundColor='black'
+            text='Send'/>
+    }/> */}
+
+       <Input message={message} setMessage={setMessage} sendMessage={sendMessage} /> 
       {/*<Component user={users} pour afficher la liste des connectés 
 a mettre en haut dans une icone près de profile a la place de messages  */}
     </div>)

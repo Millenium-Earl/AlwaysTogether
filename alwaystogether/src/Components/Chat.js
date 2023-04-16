@@ -64,8 +64,7 @@ console.log(message,messages);
             onKeyPress={(event)=> event.key==='Enter' ? sendMessage(event) : null}
             multiline={false}
             rightButtons={
-              <>
-              </>  } 
+              <Button text='send' />  } 
         />
 
          </div>

@@ -13,8 +13,6 @@ import io from 'socket.io-client'
 import Nav from './Nav';
 import CustomControls from "./CustomControls"
 
-import { TimingObject } from 'timing-object';
-import { timingsrc, setTimingsrc } from 'timingsrc';
 import SocketContext from "./Socket";
 
 import RoomChat from './RoomChat';
@@ -158,14 +156,16 @@ const MainTV = (props) => {
 
   })
 
-  socket.on('Rewind2', ()  => {
+  socket.on('Rewind2', (data)  => {
     if (playerRef?.current)
-    playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    //playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    playerRef.current.seekTo(data)
     setState({ ...state, playing: false})
   })
-  socket.on('Forward2', ()  => {
+  socket.on('Forward2', (data)  => {
     if (playerRef?.current)
-    playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    //playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    playerRef.current.seekTo(data)
     setState({ ...state, playing: false})
   })
 
@@ -181,7 +181,7 @@ const MainTV = (props) => {
       socket.off('Forward2')
     }
 
-  }, [state, socket]);  //Need to fix this<<<< makes
+  }, [ socket]);  //Need to fix this<<<< makes
     const handleProgress = (changeState) => {  // for controls visibility (onProgress is called
     // each time so...)
     var {played} = changeState
@@ -206,12 +206,15 @@ const MainTV = (props) => {
 
   const handleRewind = () => {  //rewind
     playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
-    socket.emit('Rewind1',)
+    var data = playerRef.current.getCurrentTime()
+    socket.emit('Rewind1',data)
   };
 
   const handleFastForward = () => { // forward
     playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
-    socket.emit('Forward1',)
+    var data = playerRef.current.getCurrentTime()
+    socket.emit('Forward1', data)
+    
   };
 
   const handleDisplayFormat = () => { // click for time display
